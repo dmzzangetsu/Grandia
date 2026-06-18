@@ -6,7 +6,10 @@ public class playerMovement : MonoBehaviour
 {
     [SerializeField] private float movespeed = 5f;
     [SerializeField] private InputActionReference moveActionsReference;
+    [SerializeField] private InteractingArea interactingArea;
+
     private Rigidbody2D rb;
+ 
     private Vector2 moveInput;
     
     void Awake()
@@ -18,6 +21,7 @@ public class playerMovement : MonoBehaviour
     void FixedUpdate()
     {
         rb.MovePosition(rb.position + moveInput.normalized * movespeed * Time.fixedDeltaTime);
+        interactingArea.UpdateInteractionAreaPosition(moveInput);
     }
     void OnDisable()
     {
@@ -40,4 +44,6 @@ public class playerMovement : MonoBehaviour
     {
         moveInput = Vector2.zero;
     }
+
+        
 }
