@@ -485,7 +485,7 @@ namespace Fungus.EditorUtils
             if (fungusState == null)
             {
             #if UNITY_6000
-                fungusState = GameObject.FindFirstObjectByType<FungusState>();
+                fungusState = GameObject.FindAnyObjectByType<FungusState>();
             #else
                 fungusState = GameObject.FindObjectOfType<FungusState>();
             #endif

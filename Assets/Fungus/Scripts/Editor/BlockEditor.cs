@@ -67,7 +67,7 @@ namespace Fungus.EditorUtils
             var targetBlock = target as Block;
 
         #if UNITY_6000
-            var callers = FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None)
+            var callers = FindObjectsByType<MonoBehaviour>()
         #else
             var callers = FindObjectsOfType<MonoBehaviour>()
         #endif

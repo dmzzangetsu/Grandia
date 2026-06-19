@@ -87,7 +87,7 @@ namespace Fungus.EditorUtils
         public static List<T> FindObjectsOfInterface<T>()
         {
         #if UNITY_6000
-            return Object.FindObjectsByType<Object>(FindObjectsSortMode.None).OfType<T>().ToList();
+            return Object.FindObjectsByType<Object>().OfType<T>().ToList();
         #else
             return Object.FindObjectsOfType<Object>().OfType<T>().ToList();
         #endif
