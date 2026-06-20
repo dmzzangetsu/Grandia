@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -7,6 +8,7 @@ public class playerMovement : MonoBehaviour
     [SerializeField] private float movespeed = 5f;
     [SerializeField] private InputActionReference moveActionsReference;
     [SerializeField] private InteractingArea interactingArea;
+
 
     private Rigidbody2D rb;
  
@@ -45,5 +47,13 @@ public class playerMovement : MonoBehaviour
         moveInput = Vector2.zero;
     }
 
-        
+    public void DisableMovement()
+    {
+        this.enabled = false;
+    }
+
+    public void EnableMovement()
+    {
+        this.enabled = true;
+    }
 }

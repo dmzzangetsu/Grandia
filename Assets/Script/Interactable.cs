@@ -1,0 +1,17 @@
+using UnityEngine;
+
+
+public class Interactable : MonoBehaviour
+{
+    [Header ("Bubble Icon Config")]
+    [SerializeField] private Texture2D bubbleIcon;
+    [Header ("Is the interactable one time?")]
+    [SerializeField] private bool isOneTime;
+
+    
+    public void onInteract()
+    {
+        Debug.Log(name + "interacted");
+    }
+
+}
