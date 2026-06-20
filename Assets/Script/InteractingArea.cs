@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -8,6 +9,7 @@ public class InteractingArea : MonoBehaviour
     public List<GameObject> interactableList = new List<GameObject>();
     [SerializeField] private InputActionReference interactActionsReference;
 
+    
     void Update()
     {
         if (interactableList.Count == 0)
@@ -20,6 +22,10 @@ public class InteractingArea : MonoBehaviour
         }
         
 
+    }
+    void Start()
+    {
+        TopDownManager.Instance.RegisterInteractingArea(this);
     }
     void OnTriggerEnter2D(Collider2D collision)
     {
@@ -40,6 +46,8 @@ public class InteractingArea : MonoBehaviour
         {
             Interactable currentInteractable = interactableList[0].GetComponent<Interactable>();
             currentInteractable.onInteract();
+            TopDownManager.Instance.InitiateInteraction();
+            
             
         }
     }
@@ -54,6 +62,11 @@ public class InteractingArea : MonoBehaviour
     {
         interactActionsReference.action.started -= OnInteractPressed;
         interactActionsReference.action.Disable();
+    }
+
+    public void SetInteraction(bool newValue)
+    {
+        isInteracting = newValue;
     }
 
     private void SortInteractableByDistance()

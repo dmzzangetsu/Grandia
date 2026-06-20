@@ -9,7 +9,7 @@ public class Interactable : MonoBehaviour
     [SerializeField] private bool isOneTime;
 
     
-    public void onInteract()
+    public virtual void onInteract()
     {
         Debug.Log(name + "interacted");
     }

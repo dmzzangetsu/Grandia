@@ -93,6 +93,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   interactableList: []
   interactActionsReference: {fileID: 1781555164194001046, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
+  playerMoveRef: {fileID: 0}
 --- !u!1 &6505903707627553960
 GameObject:
   m_ObjectHideFlags: 0
@@ -104,7 +105,7 @@ GameObject:
   - component: {fileID: 949286347770929548}
   - component: {fileID: 5456956317494665664}
   - component: {fileID: 2487449307776220138}
-  - component: {fileID: 8206845707828163757}
+  - component: {fileID: 6764973705343769169}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -215,7 +216,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &8206845707828163757
+--- !u!114 &6764973705343769169
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -226,7 +227,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ea238178a3b366841b6218608f7d8bf4, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: '::'
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
   movespeed: 5
   moveActionsReference: {fileID: -1680190386980627800, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   interactingArea: {fileID: 7661529020410293888}

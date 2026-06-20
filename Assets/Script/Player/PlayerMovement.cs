@@ -3,7 +3,7 @@ using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(Rigidbody2D))]
-public class playerMovement : MonoBehaviour
+public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] private float movespeed = 5f;
     [SerializeField] private InputActionReference moveActionsReference;
@@ -18,7 +18,11 @@ public class playerMovement : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
     }
-  
+
+    void Start()
+    {
+        TopDownManager.Instance.RegisterPlayerMovement(this);
+    }
 
     void FixedUpdate()
     {
@@ -47,13 +51,15 @@ public class playerMovement : MonoBehaviour
         moveInput = Vector2.zero;
     }
 
-    public void DisableMovement()
+    public void SetMovement(bool newValue)
     {
-        this.enabled = false;
-    }
-
-    public void EnableMovement()
-    {
-        this.enabled = true;
+        if (newValue)
+        {
+            this.enabled = true;
+        }
+        else
+        {
+            this.enabled = false;
+        }
     }
 }
