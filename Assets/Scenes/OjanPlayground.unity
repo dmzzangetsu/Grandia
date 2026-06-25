@@ -494,7 +494,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 460.43, y: -1000}
+  m_AnchoredPosition: {x: 460.43, y: -1200}
   m_SizeDelta: {x: 1000, y: 1000}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &529463128
@@ -699,7 +699,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -1000}
+  m_AnchoredPosition: {x: 0, y: -1200}
   m_SizeDelta: {x: 1000, y: 1000}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!222 &1190189218
@@ -759,9 +759,11 @@ GameObject:
   - component: {fileID: 1206955595}
   - component: {fileID: 1206955593}
   - component: {fileID: 1206955596}
-  - component: {fileID: 1206955599}
   - component: {fileID: 1206955600}
   - component: {fileID: 1206955601}
+  - component: {fileID: 1206955602}
+  - component: {fileID: 1206955604}
+  - component: {fileID: 1206955603}
   m_Layer: 0
   m_Name: TestFungus
   m_TagString: Untagged
@@ -837,7 +839,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Fungus::Fungus.Block
   nodeRect:
     serializedVersion: 2
-    x: 233.59998
+    x: 230.39996
     y: 190.80005
     width: 105.1
     height: 40
@@ -848,9 +850,11 @@ MonoBehaviour:
   description: 
   eventHandler: {fileID: 0}
   commandList:
-  - {fileID: 1206955599}
   - {fileID: 1206955585}
+  - {fileID: 1206955604}
   - {fileID: 1206955584}
+  - {fileID: 1206955602}
+  - {fileID: 1206955603}
   - {fileID: 1206955593}
   suppressAllAutoSelections: 0
 --- !u!114 &1206955588
@@ -907,9 +911,9 @@ MonoBehaviour:
     width: 1114
     height: 859
   selectedBlocks:
-  - {fileID: 1206955588}
+  - {fileID: 1206955595}
   selectedCommands:
-  - {fileID: 1206955601}
+  - {fileID: 1206955600}
   variables: []
   description: 
   stepPause: 0
@@ -1092,36 +1096,6 @@ MonoBehaviour:
   stringEvent:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &1206955599
-MonoBehaviour:
-  m_ObjectHideFlags: 2
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1206955583}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3ac5ce55bc698fa4290939ef6e426501, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Fungus::Fungus.Portrait
-  itemId: 13
-  indentLevel: 0
-  display: 1
-  stage: {fileID: 0}
-  character: {fileID: 1429952815}
-  replacedCharacter: {fileID: 0}
-  portrait: {fileID: 21300000, guid: 21792ab37ec660a49874dc59955041a7, type: 3}
-  offset: 0
-  fromPosition: {fileID: 0}
-  toPosition: {fileID: 529463127}
-  facing: 0
-  useDefaultSettings: 1
-  fadeDuration: 0.5
-  moveDuration: 1
-  shiftOffset: {x: 0, y: 0}
-  move: 0
-  shiftIntoPlace: 0
-  waitUntilFinished: 0
 --- !u!114 &1206955600
 MonoBehaviour:
   m_ObjectHideFlags: 2
@@ -1137,14 +1111,14 @@ MonoBehaviour:
   itemId: 14
   indentLevel: 0
   display: 2
-  stage: {fileID: 498688305}
+  stage: {fileID: 0}
   replacedStage: {fileID: 0}
   useDefaultSettings: 1
   fadeDuration: 0
   waitUntilFinished: 0
 --- !u!114 &1206955601
 MonoBehaviour:
-  m_ObjectHideFlags: 0
+  m_ObjectHideFlags: 2
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
@@ -1157,11 +1131,98 @@ MonoBehaviour:
   itemId: 15
   indentLevel: 0
   display: 1
-  stage: {fileID: 498688305}
+  stage: {fileID: 0}
   replacedStage: {fileID: 0}
   useDefaultSettings: 1
   fadeDuration: 0
   waitUntilFinished: 0
+--- !u!114 &1206955602
+MonoBehaviour:
+  m_ObjectHideFlags: 2
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1206955583}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ac5ce55bc698fa4290939ef6e426501, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fungus::Fungus.Portrait
+  itemId: 16
+  indentLevel: 0
+  display: 1
+  stage: {fileID: 0}
+  character: {fileID: 1645078282}
+  replacedCharacter: {fileID: 0}
+  portrait: {fileID: -8512396220363111085, guid: 012e5def24c74654ca16ae7a3b614ba1, type: 3}
+  offset: 0
+  fromPosition: {fileID: 0}
+  toPosition: {fileID: 529463127}
+  facing: 1
+  useDefaultSettings: 1
+  fadeDuration: 0.5
+  moveDuration: 1
+  shiftOffset: {x: 0, y: 0}
+  move: 1
+  shiftIntoPlace: 0
+  waitUntilFinished: 1
+--- !u!114 &1206955603
+MonoBehaviour:
+  m_ObjectHideFlags: 2
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1206955583}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec422cd568a9c4a31ad7c36d0572b9da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fungus::Fungus.Say
+  itemId: 18
+  indentLevel: 0
+  storyText: Hehehehehehe
+  description: 
+  character: {fileID: 0}
+  portrait: {fileID: 0}
+  voiceOverClip: {fileID: 0}
+  showAlways: 1
+  showCount: 1
+  extendPrevious: 0
+  fadeWhenDone: 1
+  waitForClick: 1
+  stopVoiceover: 1
+  waitForVO: 0
+  setSayDialog: {fileID: 0}
+--- !u!114 &1206955604
+MonoBehaviour:
+  m_ObjectHideFlags: 2
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1206955583}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ac5ce55bc698fa4290939ef6e426501, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fungus::Fungus.Portrait
+  itemId: 17
+  indentLevel: 0
+  display: 1
+  stage: {fileID: 0}
+  character: {fileID: 1645078282}
+  replacedCharacter: {fileID: 0}
+  portrait: {fileID: -1514634272677875859, guid: 76e4e03d8b80a4b478826a373f380583, type: 3}
+  offset: 0
+  fromPosition: {fileID: 0}
+  toPosition: {fileID: 529463127}
+  facing: 1
+  useDefaultSettings: 1
+  fadeDuration: 0.5
+  moveDuration: 1
+  shiftOffset: {x: 0, y: 0}
+  move: 1
+  shiftIntoPlace: 0
+  waitUntilFinished: 1
 --- !u!1 &1239986106
 GameObject:
   m_ObjectHideFlags: 0
@@ -1196,7 +1257,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: -1300, y: -1000}
+  m_AnchoredPosition: {x: -1300, y: -1200}
   m_SizeDelta: {x: 1000, y: 1000}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &1239986108
@@ -1421,74 +1482,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
   m_BlendShapeWeights: []
---- !u!1001 &1427790466
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 949286347770929548, guid: 01562b1851f6c4249b259755ebf1b87a, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0.04
-      objectReference: {fileID: 0}
-    - target: {fileID: 949286347770929548, guid: 01562b1851f6c4249b259755ebf1b87a, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.64
-      objectReference: {fileID: 0}
-    - target: {fileID: 949286347770929548, guid: 01562b1851f6c4249b259755ebf1b87a, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 949286347770929548, guid: 01562b1851f6c4249b259755ebf1b87a, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 949286347770929548, guid: 01562b1851f6c4249b259755ebf1b87a, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 949286347770929548, guid: 01562b1851f6c4249b259755ebf1b87a, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 949286347770929548, guid: 01562b1851f6c4249b259755ebf1b87a, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 949286347770929548, guid: 01562b1851f6c4249b259755ebf1b87a, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 949286347770929548, guid: 01562b1851f6c4249b259755ebf1b87a, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 949286347770929548, guid: 01562b1851f6c4249b259755ebf1b87a, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6505903707627553960, guid: 01562b1851f6c4249b259755ebf1b87a, type: 3}
-      propertyPath: m_Name
-      value: Player
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 01562b1851f6c4249b259755ebf1b87a, type: 3}
---- !u!114 &1429952815 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5472912512334068496, guid: 01562b1851f6c4249b259755ebf1b87a, type: 3}
-  m_PrefabInstance: {fileID: 1427790466}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 25fb867d2049d41f597aefdd6b19f598, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Fungus::Fungus.Character
 --- !u!1 &1545362832
 GameObject:
   m_ObjectHideFlags: 0
@@ -1626,6 +1619,74 @@ MonoBehaviour:
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
   m_Version: 2
+--- !u!1001 &1645078281
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 949286347770929548, guid: 01562b1851f6c4249b259755ebf1b87a, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.07807
+      objectReference: {fileID: 0}
+    - target: {fileID: 949286347770929548, guid: 01562b1851f6c4249b259755ebf1b87a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.12328
+      objectReference: {fileID: 0}
+    - target: {fileID: 949286347770929548, guid: 01562b1851f6c4249b259755ebf1b87a, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 949286347770929548, guid: 01562b1851f6c4249b259755ebf1b87a, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 949286347770929548, guid: 01562b1851f6c4249b259755ebf1b87a, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 949286347770929548, guid: 01562b1851f6c4249b259755ebf1b87a, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 949286347770929548, guid: 01562b1851f6c4249b259755ebf1b87a, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 949286347770929548, guid: 01562b1851f6c4249b259755ebf1b87a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 949286347770929548, guid: 01562b1851f6c4249b259755ebf1b87a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 949286347770929548, guid: 01562b1851f6c4249b259755ebf1b87a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6505903707627553960, guid: 01562b1851f6c4249b259755ebf1b87a, type: 3}
+      propertyPath: m_Name
+      value: Player
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 01562b1851f6c4249b259755ebf1b87a, type: 3}
+--- !u!114 &1645078282 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5472912512334068496, guid: 01562b1851f6c4249b259755ebf1b87a, type: 3}
+  m_PrefabInstance: {fileID: 1645078281}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25fb867d2049d41f597aefdd6b19f598, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fungus::Fungus.Character
 --- !u!1 &1768543070
 GameObject:
   m_ObjectHideFlags: 0
@@ -1660,7 +1721,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: -460.43, y: -1000}
+  m_AnchoredPosition: {x: -460.43, y: -1200}
   m_SizeDelta: {x: 1000, y: 1000}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &1768543072
@@ -1814,7 +1875,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 1300, y: -1000}
+  m_AnchoredPosition: {x: 1300, y: -1200}
   m_SizeDelta: {x: 1000, y: 1000}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &2136612247
@@ -1860,7 +1921,6 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 1545362835}
-  - {fileID: 1427790466}
   - {fileID: 769056979}
   - {fileID: 466983758}
   - {fileID: 1914454157}
@@ -1868,3 +1928,4 @@ SceneRoots:
   - {fileID: 1206955590}
   - {fileID: 56001187}
   - {fileID: 498688306}
+  - {fileID: 1645078281}

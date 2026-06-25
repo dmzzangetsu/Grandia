@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 2077866545806027680}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.011, y: -0.204, z: 0}
+  m_LocalPosition: {x: -0.011, y: -1.94, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -141,8 +141,11 @@ MonoBehaviour:
   nameColor: {r: 1, g: 1, b: 1, a: 1}
   soundEffect: {fileID: 0}
   portraits:
-  - {fileID: 21300000, guid: 21792ab37ec660a49874dc59955041a7, type: 3}
-  portraitsFace: 0
+  - {fileID: -5706914721391756003, guid: 1fbb9342d36b82e4bbcb12da419de34b, type: 3}
+  - {fileID: -8512396220363111085, guid: 012e5def24c74654ca16ae7a3b614ba1, type: 3}
+  - {fileID: 8320798245261219042, guid: 80d0344ce47b81743967028a3d733514, type: 3}
+  - {fileID: -1514634272677875859, guid: 76e4e03d8b80a4b478826a373f380583, type: 3}
+  portraitsFace: 1
   setSayDialog: {fileID: 0}
   description: 
   effectAudioSource: {fileID: 0}
@@ -159,6 +162,7 @@ GameObject:
   - component: {fileID: 5456956317494665664}
   - component: {fileID: 2487449307776220138}
   - component: {fileID: 6764973705343769169}
+  - component: {fileID: 6576617351681756388}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -176,8 +180,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 1.45, y: 0.54610807, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 7171992901932642917}
   - {fileID: 4218297529621727360}
@@ -232,7 +236,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 21300000, guid: 0174a36b4a16e5047b02bc8cea633614, type: 3}
+  m_Sprite: {fileID: 3250697856617320927, guid: 59375ebe1175d9149b07bbf86446749f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -285,3 +289,25 @@ MonoBehaviour:
   movespeed: 5
   moveActionsReference: {fileID: -1680190386980627800, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   interactingArea: {fileID: 7661529020410293888}
+--- !u!95 &6576617351681756388
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6505903707627553960}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 153ec152bbe934a4fb43dac5bd933fa8, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0

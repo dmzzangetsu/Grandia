@@ -8,6 +8,8 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float movespeed = 5f;
     [SerializeField] private InputActionReference moveActionsReference;
     [SerializeField] private InteractingArea interactingArea;
+    private Animator animator;
+    private SpriteRenderer spriteRenderer;
 
 
     private Rigidbody2D rb;
@@ -17,6 +19,8 @@ public class PlayerMovement : MonoBehaviour
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     void Start()
@@ -43,11 +47,33 @@ public class PlayerMovement : MonoBehaviour
         moveActionsReference.action.canceled += StopMove;
     }
     void Move(InputAction.CallbackContext context){
+        animator.SetBool("IsMove", true);
         moveInput = context.ReadValue<Vector2>();
+        animator.SetFloat("InputX",moveInput.x);
+        animator.SetFloat("InputY",moveInput.y);
+        if (moveInput.x > 0)
+        {
+            spriteRenderer.flipX = true;
+        }
+        else
+        {
+            spriteRenderer.flipX = false;
+        }
     }
 
     void StopMove(InputAction.CallbackContext context)
     {
+        animator.SetBool("IsMove", false);
+        if (moveInput.x > 0)
+        {
+            spriteRenderer.flipX = true;
+        }
+        else
+        {
+            spriteRenderer.flipX = false;
+        }
+        animator.SetFloat("LastInputX",moveInput.x);
+        animator.SetFloat("LastInputY",moveInput.y);
         moveInput = Vector2.zero;
     }
 
