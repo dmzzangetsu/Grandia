@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e7189feaac7ebd4cb19cc84118d6905, type: 3}
+  m_Name: ZanStats
+  m_EditorClassIdentifier: Assembly-CSharp::CharacterStats
+  characterSprite: {fileID: -7669980138167939443, guid: 59375ebe1175d9149b07bbf86446749f, type: 3}
+  characterAnimationController: {fileID: 9100000, guid: 8f691009fa9ed1140bc9a7dbcc994f5c, type: 2}
+  characterName: Zan
+  health: 100
+  SP: 20
+  ATK: 30
+  DEF: 10
+  AGI: 30
