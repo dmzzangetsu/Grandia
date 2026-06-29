@@ -9,7 +9,7 @@ public class CharacterStats : ScriptableObject
     [Header("Character Sprite And Animation")]
     public Sprite characterSprite;
     public AnimatorController characterAnimationController;
-
+    public EnemyBehavior enemyBehavior;
 
     [Header("Character Stats")]
     public string characterName;
@@ -18,7 +18,7 @@ public class CharacterStats : ScriptableObject
     public int ATK = 10;
     public int DEF = 10 ;
     public int AGI = 10;
-    [Header("Behavior For Enemy")]
-    public ActorBehavior behavior;
+
+
 }
     

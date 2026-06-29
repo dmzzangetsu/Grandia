@@ -7,7 +7,7 @@
             "id": "1b25bf86-1fea-4808-a827-1e6f27ab22dc",
             "actions": [
                 {
-                    "name": "MoveUp",
+                    "name": "SelectionUp",
                     "type": "Button",
                     "id": "b6b647f8-ca02-4cbf-92c1-b494873e1daa",
                     "expectedControlType": "",
@@ -16,7 +16,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "MoveDown",
+                    "name": "SelectionDown",
                     "type": "Button",
                     "id": "1493a2e4-170f-4bf2-9af7-2e4deca13746",
                     "expectedControlType": "",
@@ -42,7 +42,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "MoveDown",
+                    "action": "SelectionDown",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -53,7 +53,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "MoveDown",
+                    "action": "SelectionDown",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -64,7 +64,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "MoveUp",
+                    "action": "SelectionUp",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -75,14 +75,14 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "MoveUp",
+                    "action": "SelectionUp",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
                     "id": "c1f891b0-a48e-45b7-8337-b33592a72b12",
-                    "path": "<Keyboard>/enter",
+                    "path": "<Keyboard>/space",
                     "interactions": "",
                     "processors": "",
                     "groups": "",

@@ -6,7 +6,7 @@ public class ActorBehavior : MonoBehaviour
     
     public void Attack(ActorHandler target , int damage)
     {
-       target.GetHit(damage);
+       
     }
     
     public void Defend(ActorHandler target)

@@ -1,145 +1,217 @@
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Fungus;
 using NUnit.Framework;
 using TMPro;
 using Unity.VisualScripting;
+using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEditor.Animations;
 using UnityEngine;
+using UnityEngine.InputSystem.Composites;
+using Random = UnityEngine.Random;
 
-public enum ActorAligment
+public enum ActorAligmentEnum
     {
         Ally = 0,
         Enemy = 1
     }
 public class ActorHandler : MonoBehaviour
 {
+    private static readonly int AttackHash = Animator.StringToHash("Attack");
+
+    private enum State{Idle,Sliding,Busy,FinishAct}
+    public enum ChoosenAction{Attack,Defend}
+    public enum ChooseTargetType{Ally,Enemy}
+    public ChooseTargetType targetType;
+    public ChoosenAction choosenAction;
+    private State state;
+    private Vector3 targetSlidePosition;
+    private Action OnSlideComplete; 
+
     [SerializeField] private GameObject actorVisual;
     [SerializeField] private GameObject selectedMarker;
+    [SerializeField] private GameObject attackedRange;
     [SerializeField] private ActionUI actionUI;
-    public ActorBehavior actorBehavior;
-    public ActorAligment actorAligment;
-    public CharacterStats actorDefaultStats;
+
+    public ActorAligmentEnum actorAligment;
+    public CharacterStats defaultStats;
     public CharacterStats actorStats;
     private Animator actorAnimator;
     private SpriteRenderer actorSprite;
-    private int defaultTurnSpeed = 100;
-    public int currentTurnSpeed = 100;
-    private bool isSelected = false;
+    
+    public int currentActionSpeed = 100;
+    public EnemyBehavior enemyBehavior;
 
     [Header("StatusModifier")]
     public List<StatusModifier> statusModifierList;
-    
+
 
     void Awake()
     {
         actorAnimator = actorVisual.GetComponent<Animator>();
         actorSprite = actorVisual.GetComponent<SpriteRenderer>();
+        state = State.Idle;
     }
-
     void Start()
     {
-        if (actorAligment == ActorAligment.Ally){
-        actionUI.attackButton.onClick.AddListener(OnAttackPressed);
-        actionUI.defendButton.onClick.AddListener(OnDefendPressed);
+        if (actionUI != null)
+        {
+        actionUI.attackButton.onClick.AddListener(OnAttackClick);
+        actionUI.defendButton.onClick.AddListener(OnDefendClick);
         }
+
     }
 
-    void OnAttackPressed()
-    {
-        BattleManager.Instance.AttackActor();
-    }
-
-    void OnDefendPressed()
-    {
-        BattleManager.Instance.DefendActor();
-    }
-
-    public void InitializeActors()
-    {
-        if (actorDefaultStats == null)
-        {
-            Debug.LogError(gameObject.name + "ActorDefault Not set and null");
+    private void OnAttackClick (){
+        if(state == State.Idle){
+        SetUIVisibilitiy(false);
+        BattleManager bm = BattleManager.Instance;
+        choosenAction = ChoosenAction.Attack;
+        targetType = ChooseTargetType.Enemy;
+        bm.InitiateSelection();
+        // Attack(bm.targetActor,()=>{bm.EndTurn();});
         }
-        else
-        {
-            actorStats = ScriptableObject.Instantiate(actorDefaultStats);
-        }
-        if (actorStats.characterAnimationController == null || actorStats.characterSprite == null)
-        {
-            Debug.LogError("maybe your character sprite or animation controller not set in:"+gameObject.name);
-        }
-        else
-        {
-            actorAnimator.runtimeAnimatorController = actorStats.characterAnimationController;
-            actorSprite.sprite = actorStats.characterSprite;
-        }
-
-        //Simple Turn speed using Agi
-        defaultTurnSpeed -= actorStats.AGI;
-        currentTurnSpeed = defaultTurnSpeed;
     }
     
-    public void ResetTurnSpeed()
+    private void OnDefendClick()
     {
-        currentTurnSpeed = defaultTurnSpeed;
+        choosenAction = ChoosenAction.Defend;
+
     }
 
-    public void ShowActionUI()
+    void Update()
     {
-        if (actorAligment == ActorAligment.Ally)
+        switch (state)
         {
-        actionUI.gameObject.SetActive(true);
-        }
-    }
-
-    public void HideActionUI()
-    {
-        if (actorAligment == ActorAligment.Ally)
-        {
-        actionUI.gameObject.SetActive(false);
-        }
-    }
-
-    public void ActorSelected()
-    {
-        isSelected = true;
-        selectedMarker.SetActive(true);
-    }
-    
-    public void ActorDeselected()
-    {
-        isSelected = false;
-        selectedMarker.SetActive(false);
-    }
-
-    public void GetHit(int damage)
-    {
-        int finalDamage = damage - actorStats.DEF;
-
-        if(statusModifierList != null)
-        {
-            foreach (StatusModifier modifier in statusModifierList)
-            {
-                if (modifier.modifierName == StatusModifierName.DEFEND)
+            case State.Idle:
+                break;
+            case State.Busy:
+                break;
+            case State.Sliding:
+                float slideSpeed = 20f;
+                actorVisual.transform.position += slideSpeed * Time.deltaTime * (targetSlidePosition - GetVisualPosition());
+                float reachedDistance = 1f;
+                if(Vector3.Distance(GetVisualPosition(),targetSlidePosition) < reachedDistance)
                 {
-                    finalDamage = finalDamage * modifier.damageReduction/100;
-                    break;
+                    actorVisual.transform.position = targetSlidePosition;
+                    OnSlideComplete();
+
                 }
-            }
-        }
-        if (finalDamage <= 0)
-        {
-            finalDamage = 1;
-        }
-        actorStats.health -= finalDamage;
-        Debug.Log(actorStats.characterName + " Taken" + finalDamage +"Damage");
-        if (actorStats.health <= 0)
-        {
-            Dead();
-        }
+                        break;
+                    
+                }
     }
-    public void Dead()
+    public void SetupActor(CharacterStats newCharStats)
     {
-         BattleManager.Instance.DisableActors(this);
+        actorStats = ScriptableObject.Instantiate(newCharStats);
+        actorAnimator.runtimeAnimatorController = actorStats.characterAnimationController;
+        actorSprite.sprite = actorStats.characterSprite;
+        ResetCharacterSpeed();
+        if(newCharStats.enemyBehavior != null)
+        {
+            PopulateEnemyBehavior(newCharStats);
+        }
     }
+
+    public void PopulateEnemyBehavior(CharacterStats newCharStats)
+    {
+        enemyBehavior = ScriptableObject.Instantiate(newCharStats.enemyBehavior);
+        
+    }
+    public Vector3 GetPosition()
+    {
+        return gameObject.transform.position;
+    }
+
+    public Vector3 GetVisualPosition()
+    {
+        return actorVisual.transform.position;
+    }
+    public Vector3 GetAttackedRangePosition()
+    {
+        return attackedRange.transform.position;
+    }
+
+    public void ResetCharacterSpeed()
+    {
+        currentActionSpeed = 0;
+    }
+
+    public void SetActionSpeed()
+    {
+        currentActionSpeed += actorStats.AGI + Random.Range(0,5);
+    }
+    
+    public void Attack(ActorHandler target, Action OnAttackComplete)
+    {
+        Vector3 originalPos = GetPosition();
+       
+        SlideToPosition(target.GetAttackedRangePosition(), ()=>
+        {
+            state = State.Busy;
+                PlayAttackAnimation(() =>
+                {
+                SlideToPosition(originalPos, () =>
+                {
+                    state = State.Idle;
+                });
+            });
+
+        });
+        
+        OnAttackComplete();
+        
+    }
+
+    public IEnumerator BreakRest(float time)
+    {
+        yield return new WaitForSecondsRealtime(time);
+    }
+    
+    public void SlideToPosition(Vector3 slideTarget, Action onSlideComplete)
+    {
+        this.targetSlidePosition = slideTarget;
+        this.OnSlideComplete = onSlideComplete;
+        state = State.Sliding;
+    }
+
+    private void PlayAttackAnimation(Action onAttackAnimationComplete)
+    {
+       actorAnimator.Play(AttackHash);
+        StartCoroutine(WaitForAnimation("Attack", () =>
+        {
+            onAttackAnimationComplete();
+        }));
+    }
+    private IEnumerator WaitForAnimation(string stateName, Action onAnimationComplete)
+    {
+        yield return null;
+
+        AnimatorStateInfo stateInfo = actorAnimator.GetCurrentAnimatorStateInfo(0);
+
+        while (stateInfo.IsName(stateName)&& stateInfo.normalizedTime < 1.0f )
+        {
+            stateInfo = actorAnimator.GetCurrentAnimatorStateInfo(0);
+            yield return null;
+            
+        }
+        onAnimationComplete();
+        
+    }
+
+    public void SetMarkerVisibility(bool visibility)
+    {
+        selectedMarker.SetActive(visibility);
+    }
+
+    public void SetUIVisibilitiy(bool visibility)
+    {
+         if (actionUI != null)
+        {
+            actionUI.gameObject.SetActive(visibility);
+        }
+    }
+
 }

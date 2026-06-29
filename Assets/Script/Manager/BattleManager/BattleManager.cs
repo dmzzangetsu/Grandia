@@ -1,5 +1,7 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Fungus;
 using MoonSharp.Interpreter;
 using NUnit.Framework;
@@ -12,29 +14,19 @@ using Random=UnityEngine.Random;
 
 public class BattleManager : MonoBehaviour
 {
-    public enum ActionList{ATTACK=0,DEFEND=1,GIVEBUFF=2,GIVEDEBUFF=3}
-    private ActionList actorAction;
-
-    public static BattleManager Instance{get;private set;}
-    [Header("InputSysyem")]
-    public PlayerInput battleInput;
-    public bool isChoosing = false;
-    [SerializeField] private int selectionIndex = 0;
-    public ActorHandler selectedEnemy;
-
-    [Header("Actor Handler")]
-    public List<ActorHandler> allyActorHandlers;
-    public List<ActorHandler> enemyActorHandlers;
+    private enum State{CHOOSEACTION,ENEMYTURN,BUSY,SETTURN,PAUSED,ENDTURN}
+    public static BattleManager Instance{get; private set;}
+    
+    private int selectionIndex = 0 ;
+    private readonly int actionSpeedTreshold = 10000;
+    [SerializeField] private PlayerInput playerInput;
+    private State state;
+    public List<ActorHandler> allyList;
+    public List<ActorHandler> enemyList;
+    public List<ActorHandler> actors;
     public BattleParticipant battleParticipant;
-    [Header("Remaining Participant")]
-    public List<ActorHandler> remainingActor;
-    public List<ActorHandler> actorTurns;
-
     public ActorHandler currentTurn;
-    [Header("Battle UI")]
-    public TextMeshProUGUI turnLabel;
-    
-    
+    public ActorHandler currentTarget;
     void Awake()
     {
         if (Instance != null && Instance != this)
@@ -42,264 +34,163 @@ public class BattleManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
+
         Instance = this;
-        
     }
+
     void Start()
     {
-        // battleInput.GetComponent<PlayerInput>();
-        battleInput.actions.Disable();
-        StartBattle();
+        playerInput.actions.Disable();
+        SetupActor();
+        allyList = actors.Where<ActorHandler>(a => a.actorAligment==ActorAligmentEnum.Ally).ToList();
+        enemyList = actors.Where<ActorHandler>(a => a.actorAligment==ActorAligmentEnum.Enemy).ToList();
+        currentTarget = actors[3];
+        state = State.SETTURN;
     }
 
-    public void StartBattle()
+    void Update()
     {
-        if(battleParticipant == null)
-        {
-            Debug.LogError("You Forgot to set battleParticipant");
-            return;
-        }        
-        SetBattleActors();
-        
-        InitiateTurn();
-    }
+        Keyboard currentKeyboard = Keyboard.current;
+        if (currentKeyboard == null) return;
 
-    public void InitiateSelectEnemy()
-    {
-        battleInput.actions.Enable();
-        isChoosing = true;
-        
-        for (int i = 0; i < remainingActor.Count; i++)
+        switch (state)
         {
-            if (remainingActor[i].actorAligment == ActorAligment.Enemy)
-            {
-                selectedEnemy = remainingActor[i];
-                selectionIndex = i;
-                selectedEnemy.ActorSelected();
-                return;
-            }
+            case State.SETTURN:
+
+                for (int i = 0; i < actors.Count; i++)
+                {
+                    actors[i].SetActionSpeed();
+                    if(actors[i].currentActionSpeed > actionSpeedTreshold)
+                    {
+                        state = State.PAUSED;
+                    }                   
+                }
+
+            break;
+
+            case State.PAUSED:
+                state = State.BUSY;
+                List<ActorHandler> actorSpeedExceedThreshold = actors.Where(actors=>actors.currentActionSpeed > 500).ToList();
+                actorSpeedExceedThreshold[0].ResetCharacterSpeed();
+                SelectCurrentActor(actorSpeedExceedThreshold[0]);
+
+                if (currentTurn.actorAligment == ActorAligmentEnum.Enemy)
+                {
+                    state = State.ENEMYTURN;
+                }
+                else{
+                    state = State.CHOOSEACTION;
+                }
+
+
+            break;
+
+            case State.ENEMYTURN:
+                //Temporary Fix
+                Debug.Log(currentTurn);
+                currentTurn.enemyBehavior.ExecuteBehavior(()=>{});
+                EndTurn();
+            break;
+
+
+
+
         }
     }
-
-
-    public void AttackActor()
-    {
-        actorAction = ActionList.ATTACK;
-        InitiateSelectEnemy();
-    }
-
-    public void DefendActor()
-    {
-        StatusModifierManager.Instance.ApplyStatusModifier(currentTurn,StatusModifierName.DEFEND,1);
-        EndTurn();
-    }
-
-    void OnMoveUp()
-    {
     
-        selectionIndex--;
-         if (selectionIndex < 0)
-        {
-            selectionIndex = remainingActor.Count - 1;
-        }
 
-        if (remainingActor[selectionIndex].actorAligment == ActorAligment.Ally)
+
+    public void InitiateSelection()
+    {
+        switch (currentTurn.targetType)
         {
-            OnMoveUp();
+            case ActorHandler.ChooseTargetType.Ally:
+                SetTarget(allyList[0]);
+            break;
+            
+            case ActorHandler.ChooseTargetType.Enemy:
+                SetTarget(enemyList[0]);
+            break;
+            
         }
-        else
-        {
-            SetEnemy(selectionIndex);
-        }
+        playerInput.actions.Enable();
+        
+    }
+    public void SetTarget(ActorHandler target)
+    {
+        //setMarkerVisibility previous Target to false
+        currentTarget.SetMarkerVisibility(false);
+        
+        currentTarget = target;
+        currentTarget.SetMarkerVisibility(true);
     }
 
-    void OnMoveDown()
+    void OnSelectionUp()
+    {
+        selectionIndex--;
+        if (selectionIndex < 0)
+        {
+            selectionIndex = allyList.Count - 1;
+        }
+        SetTarget(enemyList[selectionIndex]);
+    }
+
+    void OnSelectionDown()
     {
         selectionIndex++;
-        if (selectionIndex >= remainingActor.Count)
+        if (selectionIndex >= allyList.Count)
         {
             selectionIndex = 0;
         }
-        if (remainingActor[selectionIndex].actorAligment == ActorAligment.Ally)
-        {
-            OnMoveDown();
-        }
-        else
-        {
-            SetEnemy(selectionIndex);
-        }
-        
+        SetTarget(enemyList[selectionIndex]);
     }
 
     void OnAcceptSelection()
     {
-        if (isChoosing)
+        state = State.CHOOSEACTION;
+        playerInput.actions.Disable();
+        switch (currentTurn.choosenAction)
         {
-        isChoosing = false;
-        selectedEnemy.ActorDeselected();
-        battleInput.actions.Disable();
+            case ActorHandler.ChoosenAction.Attack:
+            Debug.Log(currentTarget + " Has Been Attacked By" + currentTurn);
+            currentTurn.Attack(currentTarget,()=> {EndTurn();});
+            break;
+            
         }
-
-        if (actorAction == ActionList.ATTACK)
-        {
-            selectedEnemy.GetHit(currentTurn.actorStats.ATK);
-        }
-        EndTurn();
     }
 
-    private void SetEnemy(int Enemyindex)
-    {
-        if (selectedEnemy == remainingActor[Enemyindex])
+
+
+
+    public void SetupActor()
+    {   
+        if (battleParticipant == null)
         {
+            Debug.LogError("Battle Participant Not Assigned");
             return;
         }
-        selectedEnemy.ActorDeselected();
-        selectedEnemy = remainingActor[Enemyindex];
-        selectedEnemy.ActorSelected();
+        List<CharacterStats> combinedStatsType = battleParticipant.allyCharacter.Concat<CharacterStats>(battleParticipant.enemyCharacter).ToList<CharacterStats>(); 
+        Debug.Log(combinedStatsType.Count);
+        for (int i = 0; i < actors.Count; i++)
+        {
+            actors[i].SetupActor(combinedStatsType[i]);
+            
+        }
     }
 
-
-    public void InitiateTurn()
-    {   
-        if (isChoosing){
-            EndTurn();
-        }
-        currentTurn = actorTurns[0];
-        turnLabel.SetText(currentTurn.actorStats.characterName + " Turn");
-        currentTurn.ShowActionUI();
-        if (currentTurn.actorAligment == ActorAligment.Enemy)
-        {
-            EnemyAttackTarget();
-        }
-        else
-        {
-            currentTurn.ShowActionUI();
-        }
-    }
-    // public void SetInitialTurns()
-    // {
-    //     foreach (ActorHandler actor in allyActorHandlers)
-    //     {
-    //         actorTurns.Add(actor);
-    //     }
-
-    //     foreach (ActorHandler actor in enemyActorHandlers)
-    //     {
-    //         actorTurns.Add(actor);
-    //     }
-    //     SortTurnBySpeed();
-    // }
-
-    public void SortTurnBySpeed()
+    public void SelectCurrentActor(ActorHandler target)
     {
-        actorTurns.Sort((a,b) => a.currentTurnSpeed.CompareTo(b.currentTurnSpeed));
-    }
-
-    void SetBattleActors()
-    {
-        for (int i = 0; i < battleParticipant.allyCharacter.Count; i++)
-        {
-            allyActorHandlers[i].gameObject.SetActive(true);
-            allyActorHandlers[i].actorDefaultStats = battleParticipant.allyCharacter[i];
-            allyActorHandlers[i].InitializeActors();
-            remainingActor.Add(allyActorHandlers[i]);
-        }
-        for (int i = 0; i < battleParticipant.enemyCharacter.Count; i++)
-        {
-            enemyActorHandlers[i].gameObject.SetActive(true);
-            enemyActorHandlers[i].actorDefaultStats = battleParticipant.enemyCharacter[i];
-            enemyActorHandlers[i].InitializeActors();
-            remainingActor.Add(enemyActorHandlers[i]);
-        }
-        actorTurns = new List<ActorHandler>(remainingActor);
-        SortTurnBySpeed();
-    }
-
-    public void DisableActors(ActorHandler actorHandler)
-    {
-        remainingActor.Remove(actorHandler);
-        actorTurns.Remove(actorHandler);
-        actorHandler.gameObject.SetActive(false);
+        currentTurn = target;
+        currentTurn.SetUIVisibilitiy(true);
+        
     }
 
     public void EndTurn()
     {
-        ActorHandler tempActorHandler = actorTurns[0];
-        for (int i = 1; i < actorTurns.Count; i++)
-        {
-            actorTurns[i].currentTurnSpeed -= actorTurns[0].currentTurnSpeed;
-        }
-        currentTurn.HideActionUI();
-        currentTurn.ResetTurnSpeed();
-        UpdateStatModifier();
-        actorTurns.Add(tempActorHandler);
-        actorTurns.RemoveAt(0);
-        SortTurnBySpeed();
-        InitiateTurn();
-
-    }
-    // public void GetTurnsIndex()
-    // {
-    //     for (int i = 0; i < remainingActor.Count; i++)
-    //     {
-    //         if(actorTurns[0].name == remainingActor[i].name)
-    //         {
-    //             actorTurns.Add(remainingActor[i]);
-    //             actorTurns.RemoveAt(0);
-    //         }            
-    //     }
-    // }
-    public void UpdateStatModifier()
-    {
-        if (currentTurn.statusModifierList == null)
-        {
-            return;
-        }
-
-        for (int i = 0; i < currentTurn.statusModifierList.Count; i++)
-        {
-            currentTurn.statusModifierList[i].turnLeft--;
-            if (currentTurn.statusModifierList[i].turnLeft <= 0)
-            {
-                currentTurn.statusModifierList.RemoveAt(i);
-            }
-        }
-    }
-    public void DebugAddModifier()
-    {
-        StatusModifierManager.Instance.ApplyStatusModifier(allyActorHandlers[0],StatusModifierName.DEFEND,2);
-    }
-
-    public void EnemyAttackTarget()
-    {
-        // List<ActorHandler> allyActorList = new List<ActorHandler>();
-        // ActorHandler target;
-
-        // for (int i = 0; i < remainingActor.Count; i++)
-        // {
-        //     if (remainingActor[i].actorAligment == ActorAligment.Ally)
-        //     {
-        //         allyActorList.Add(remainingActor[i]);
-        //     }
-        // }
+        currentTurn.SetUIVisibilitiy(false);
+        currentTarget.SetMarkerVisibility(false);
+        state = State.SETTURN;
         
-        // int maxWeightDecision = 100;
-        // int goodWeightDecision = 20;
-        // // 20% get good decision
-        // int decisionRoll = Random.Range(0,100);
-        // if (decisionRoll >= maxWeightDecision - goodWeightDecision)
-        // {
-        //   allyActorList.Sort((a,b)=> a.actorStats.health.CompareTo(b.actorStats.health));
-        //   target = allyActorList[0];
-        // }
-        // else
-        // {
-
-        //     int randomIndex = Random.Range(0,allyActorList.Count);
-        //     target = allyActorList[randomIndex];
-        // }
-        // target.GetHit(currentTurn.actorStats.ATK);
-        EndTurn();
     }
 
 }
