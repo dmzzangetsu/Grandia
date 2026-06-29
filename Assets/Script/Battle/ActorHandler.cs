@@ -34,6 +34,7 @@ public class ActorHandler : MonoBehaviour
     [SerializeField] private GameObject selectedMarker;
     [SerializeField] private GameObject attackedRange;
     [SerializeField] private ActionUI actionUI;
+    [SerializeField] private HealthContainer healthBar;
 
     public ActorAligmentEnum actorAligment;
     public CharacterStats defaultStats;
@@ -78,13 +79,17 @@ public class ActorHandler : MonoBehaviour
     private void OnDefendClick()
     {
         choosenAction = ChoosenAction.Defend;
+        StatusModifierManager.Instance.ApplyStatusModifier(this,StatusModifierName.DEFEND,1);
+        BattleManager.Instance.EndTurn();
 
     }
 
     void Update()
     {
+        healthBar.UpdateHealthBar(actorStats.health);
         switch (state)
         {
+            
             case State.Idle:
                 break;
             case State.Busy:
@@ -96,10 +101,10 @@ public class ActorHandler : MonoBehaviour
                 if(Vector3.Distance(GetVisualPosition(),targetSlidePosition) < reachedDistance)
                 {
                     actorVisual.transform.position = targetSlidePosition;
-                    OnSlideComplete();
 
+                    OnSlideComplete();
                 }
-                        break;
+             break;
                     
                 }
     }
@@ -108,6 +113,8 @@ public class ActorHandler : MonoBehaviour
         actorStats = ScriptableObject.Instantiate(newCharStats);
         actorAnimator.runtimeAnimatorController = actorStats.characterAnimationController;
         actorSprite.sprite = actorStats.characterSprite;
+        healthBar.SetMaxHealth(actorStats.health);
+
         ResetCharacterSpeed();
         if(newCharStats.enemyBehavior != null)
         {
@@ -153,6 +160,7 @@ public class ActorHandler : MonoBehaviour
             state = State.Busy;
                 PlayAttackAnimation(() =>
                 {
+                    GetHit(target,target.actorStats.ATK);
                 SlideToPosition(originalPos, () =>
                 {
                     state = State.Idle;
@@ -199,6 +207,37 @@ public class ActorHandler : MonoBehaviour
         }
         onAnimationComplete();
         
+    }
+
+    public void GetHit(ActorHandler target, int damage)
+    {
+        foreach (StatusModifier statusModifier in statusModifierList)
+        {
+            if (statusModifier.modifierName == StatusModifierName.DEFEND)
+            {
+                damage -= damage * statusModifier.damageReduction / 100;
+            }
+        }
+
+        float randomModifier = Random.Range(0.05f,0.1f);
+        int finalDamage = (int)(damage + (damage * randomModifier));
+        finalDamage -= target.actorStats.DEF;
+        if (finalDamage <= 0)
+        {
+            finalDamage = 1;
+        }
+        target.actorStats.health -= finalDamage;
+        
+        if (target.actorStats.health <= 0)
+        {
+            Dead(target);
+        }
+    
+    }
+
+    public void Dead(ActorHandler target)
+    {
+        BattleManager.Instance.OnActorDead(target);
     }
 
     public void SetMarkerVisibility(bool visibility)

@@ -14,16 +14,18 @@ using Random=UnityEngine.Random;
 
 public class BattleManager : MonoBehaviour
 {
-    private enum State{CHOOSEACTION,ENEMYTURN,BUSY,SETTURN,PAUSED,ENDTURN}
+    public enum State{CHOOSEACTION,ENEMYTURN,BUSY,SETTURN,PAUSED,ENDTURN, WINSTATE}
     public static BattleManager Instance{get; private set;}
     
     private int selectionIndex = 0 ;
-    private readonly int actionSpeedTreshold = 10000;
+    private bool isCharacterSelected= true;
+    private readonly int actionSpeedTreshold = 500;
     [SerializeField] private PlayerInput playerInput;
-    private State state;
+    [HideInInspector]public State state;
     public List<ActorHandler> allyList;
     public List<ActorHandler> enemyList;
     public List<ActorHandler> actors;
+    public List<ActorHandler> actorsHolders;
     public BattleParticipant battleParticipant;
     public ActorHandler currentTurn;
     public ActorHandler currentTarget;
@@ -42,6 +44,7 @@ public class BattleManager : MonoBehaviour
     {
         playerInput.actions.Disable();
         SetupActor();
+        actors = new List<ActorHandler>(actorsHolders);
         allyList = actors.Where<ActorHandler>(a => a.actorAligment==ActorAligmentEnum.Ally).ToList();
         enemyList = actors.Where<ActorHandler>(a => a.actorAligment==ActorAligmentEnum.Enemy).ToList();
         currentTarget = actors[3];
@@ -63,6 +66,7 @@ public class BattleManager : MonoBehaviour
                     if(actors[i].currentActionSpeed > actionSpeedTreshold)
                     {
                         state = State.PAUSED;
+                        break;
                     }                   
                 }
 
@@ -86,10 +90,9 @@ public class BattleManager : MonoBehaviour
             break;
 
             case State.ENEMYTURN:
-                //Temporary Fix
-                Debug.Log(currentTurn);
-                currentTurn.enemyBehavior.ExecuteBehavior(()=>{});
-                EndTurn();
+                state = State.BUSY;
+                StartCoroutine(ExecuteEnemyBehavior());
+                
             break;
 
 
@@ -115,6 +118,19 @@ public class BattleManager : MonoBehaviour
         }
         playerInput.actions.Enable();
         
+    }
+    public IEnumerator executeAttack()
+    {
+        currentTurn.Attack(currentTarget,()=>{});
+        yield return new WaitForSecondsRealtime(1);
+        EndTurn();
+    }
+    public IEnumerator ExecuteEnemyBehavior()
+    {
+        yield return new WaitForSecondsRealtime(1);
+        currentTurn.enemyBehavior.ExecuteBehavior();
+        yield return new WaitForSecondsRealtime(1);
+        EndTurn();
     }
     public void SetTarget(ActorHandler target)
     {
@@ -153,12 +169,35 @@ public class BattleManager : MonoBehaviour
         {
             case ActorHandler.ChoosenAction.Attack:
             Debug.Log(currentTarget + " Has Been Attacked By" + currentTurn);
-            currentTurn.Attack(currentTarget,()=> {EndTurn();});
+            StartCoroutine(executeAttack());
             break;
             
         }
     }
 
+    public void OnActorDead(ActorHandler target)
+    {
+        if (target.actorAligment == ActorAligmentEnum.Ally)
+        {
+            allyList.Remove(target);
+            actors.Remove(target);
+        }
+        else
+        {
+            enemyList.Remove(target);
+            actors.Remove(target);
+        }
+        target.gameObject.SetActive(false);
+        if (allyList == null)
+        {
+            Debug.Log("GameOver");
+        }
+        else
+        {
+            Debug.Log("WINNNN");
+            
+        }
+    }
 
 
 
@@ -171,9 +210,9 @@ public class BattleManager : MonoBehaviour
         }
         List<CharacterStats> combinedStatsType = battleParticipant.allyCharacter.Concat<CharacterStats>(battleParticipant.enemyCharacter).ToList<CharacterStats>(); 
         Debug.Log(combinedStatsType.Count);
-        for (int i = 0; i < actors.Count; i++)
+        for (int i = 0; i < actorsHolders.Count; i++)
         {
-            actors[i].SetupActor(combinedStatsType[i]);
+            actorsHolders[i].SetupActor(combinedStatsType[i]);
             
         }
     }
@@ -181,16 +220,22 @@ public class BattleManager : MonoBehaviour
     public void SelectCurrentActor(ActorHandler target)
     {
         currentTurn = target;
-        currentTurn.SetUIVisibilitiy(true);
-        
+        currentTurn.SetUIVisibilitiy(true);        
     }
 
     public void EndTurn()
     {
+        for (int i = 0; i < currentTurn.statusModifierList.Count; i++)
+        {
+            currentTurn.statusModifierList[i].turnLeft--;
+            if (currentTurn.statusModifierList[i].turnLeft <= 0)
+            {
+               currentTurn.statusModifierList.RemoveAt(i);
+            }
+        }
         currentTurn.SetUIVisibilitiy(false);
         currentTarget.SetMarkerVisibility(false);
         state = State.SETTURN;
-        
     }
 
 }

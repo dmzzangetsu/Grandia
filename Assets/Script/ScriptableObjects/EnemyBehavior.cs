@@ -13,7 +13,7 @@ public class EnemyBehavior : ScriptableObject
     public ActorHandler target;
     private BattleManager bm;
 
-    public void ExecuteBehavior(Action OnFinishExecuted)
+    public void ExecuteBehavior()
     {
         if(BattleManager.Instance == null){
             Debug.LogError("Missing Battle Manager");
@@ -33,7 +33,7 @@ public class EnemyBehavior : ScriptableObject
             ExectueNormalTargeting();
             
         }
-        bm.currentTurn.Attack(target,()=>{OnFinishExecuted();});
+        bm.currentTurn.Attack(target,()=>{});
     }
 
     public void ExecuteSmartTargeting()
