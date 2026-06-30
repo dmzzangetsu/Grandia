@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e7189feaac7ebd4cb19cc84118d6905, type: 3}
+  m_Name: TrainingDummy
+  m_EditorClassIdentifier: Assembly-CSharp::CharacterStats
+  characterSprite: {fileID: 4294694359391820836, guid: c1a57fa62c088814695f8fe3070f4722, type: 3}
+  characterAnimationController: {fileID: 9100000, guid: da9f2c0a8536f98479d1dbfabec601c6, type: 2}
+  enemyBehavior: {fileID: 11400000, guid: 439c1297a5be7bb41aeb4ffa2aaa39de, type: 2}
+  characterName: Training Dummy
+  health: 200
+  SP: 10
+  ATK: 25
+  DEF: 10
+  AGI: 10
