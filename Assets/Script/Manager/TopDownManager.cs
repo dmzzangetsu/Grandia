@@ -18,6 +18,7 @@ public class TopDownManager : MonoBehaviour
 
     public void InitiateInteraction()
     {
+        
         playerMovement.SetMovement(false);
         interactingArea.SetInteraction(true);
 

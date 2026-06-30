@@ -7,7 +7,6 @@ using NUnit.Framework;
 using TMPro;
 using Unity.VisualScripting;
 using Unity.VisualScripting.Antlr3.Runtime.Misc;
-using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.InputSystem.Composites;
 using Random = UnityEngine.Random;
@@ -163,7 +162,7 @@ public class ActorHandler : MonoBehaviour
             state = State.Busy;
                 PlayAttackAnimation(() =>
                 {
-                    GetHit(target,target.actorStats.ATK);
+                    GetHit(target,actorStats.ATK);
                 SlideToPosition(originalPos, () =>
                 {
                     state = State.Idle;

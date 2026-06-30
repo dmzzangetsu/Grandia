@@ -19,8 +19,7 @@ public class InteractingArea : MonoBehaviour
         else if(interactableList.Count > 1)
         {
             SortInteractableByDistance();
-        }
-        
+        }  
 
     }
     void Start()
@@ -29,13 +28,20 @@ public class InteractingArea : MonoBehaviour
     }
     void OnTriggerEnter2D(Collider2D collision)
     {
-        interactableList.Add(collision.gameObject);
+        if (collision.CompareTag("Interactable"))
+        {
+             interactableList.Add(collision.gameObject);
+        }
+       
      
     }
 
     void OnTriggerExit2D(Collider2D collision)
     {
-        interactableList.Remove(collision.gameObject);
+        if (collision.CompareTag("Interactable"))
+        {
+             interactableList.Remove(collision.gameObject);
+        }
 
        
     }

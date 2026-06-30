@@ -44,6 +44,18 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: BG_Far
+    uniqueID: 2851555369
+    locked: 0
+  - name: BG
+    uniqueID: 4219119943
+    locked: 0
+  - name: Player
+    uniqueID: 1594832711
+    locked: 0
+  - name: Canvas
+    uniqueID: 1203279891
+    locked: 0
   m_RenderingLayers:
   - Default
   m_MigratedRenderPipelines: []

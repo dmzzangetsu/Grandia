@@ -5,8 +5,23 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/SampleScene.unity
     guid: 8c9cfa26abfee488c85f1582747f6a02
+  - enabled: 1
+    path: Assets/Scenes/Cutsene/GateCutscene.unity
+    guid: bd599fdb9f2424e4aa8396526b91add7
+  - enabled: 1
+    path: Assets/Scenes/Stages/Stage1.unity
+    guid: da088ffd542a24a41816f54725154e58
+  - enabled: 1
+    path: Assets/Scenes/Cutsene/EinenCutScene.unity
+    guid: 422ce76155bb23d428bb4050c13ab3a9
+  - enabled: 1
+    path: Assets/Scenes/BattleInstance.unity
+    guid: 64b9ada7e1e059946adaf6c15988f4b7
+  - enabled: 1
+    path: Assets/Scenes/Cutsene/ToBeContinued.unity
+    guid: f8e420e66dec80f4891881ed2fd05410
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}

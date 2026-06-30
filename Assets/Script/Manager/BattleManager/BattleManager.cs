@@ -10,6 +10,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.LowLevel;
+using UnityEngine.SceneManagement;
 using Random=UnityEngine.Random;
 
 public class BattleManager : MonoBehaviour
@@ -94,11 +95,8 @@ public class BattleManager : MonoBehaviour
                 StartCoroutine(ExecuteEnemyBehavior());
                 
             break;
-
-
-
-
         }
+     
     }
     
 
@@ -188,15 +186,21 @@ public class BattleManager : MonoBehaviour
             actors.Remove(target);
         }
         target.gameObject.SetActive(false);
-        if (allyList == null)
+        checkBattleCondition();
+        
+    }
+
+    public void checkBattleCondition()
+    {
+        if (allyList.Count == 0)
         {
             Debug.Log("GameOver");
         }
-        else if(enemyList == null)
+        else if(enemyList.Count == 0)
         {
-            Debug.Log("WINNNN");
-            
+            SceneManager.LoadScene("ToBeContinued");
         }
+
     }
 
 

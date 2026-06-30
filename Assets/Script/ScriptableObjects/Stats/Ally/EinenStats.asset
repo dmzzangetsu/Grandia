@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CharacterStats
   characterSprite: {fileID: -3010246908800230271, guid: f86fd5bd949bd404b877439b575dd773, type: 3}
   characterAnimationController: {fileID: 9100000, guid: df5539002a9150249ae4580d9239ba7e, type: 2}
+  enemyBehavior: {fileID: 0}
   characterName: Einen
   health: 200
   SP: 10
-  ATK: 40
+  ATK: 100
   DEF: 40
   AGI: 5
-  behavior: {fileID: 0}

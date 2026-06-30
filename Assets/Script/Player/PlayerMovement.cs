@@ -27,6 +27,7 @@ public class PlayerMovement : MonoBehaviour
     {
         TopDownManager.Instance.RegisterPlayerMovement(this);
     }
+    
 
     void FixedUpdate()
     {
@@ -38,6 +39,7 @@ public class PlayerMovement : MonoBehaviour
         moveActionsReference.action.performed -= Move;
         moveActionsReference.action.canceled -= StopMove;
         moveActionsReference.action.Disable();
+        animator.SetBool("IsMove", false);
     }
 
     void OnEnable()
