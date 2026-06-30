@@ -4,21 +4,33 @@ using UnityEngine.UI;
 
 public class HealthContainer : MonoBehaviour
 {
-    public Slider slider;
+    public Slider healthSlider;
+    public Slider actionSlider;
     public TextMeshProUGUI maxHealthLabel;
     public TextMeshProUGUI currentHealthLabel;
-    
+
+
+    public void Start()
+    {
+        actionSlider.maxValue = 500;
+    }
 
     public void SetMaxHealth(int health)
     {
-        slider.maxValue = health;
-        slider.value = health;
+        healthSlider.maxValue = health;
+        healthSlider.value = health;
         maxHealthLabel.text = health.ToString();
         currentHealthLabel.text = health.ToString();
     }
     public void UpdateHealthBar(int health)
     {
         currentHealthLabel.text = health.ToString();
-        slider.value = health;
+        healthSlider.value = health;
+    }
+
+    public void UpdateActionBar(int actionSpeed)
+    {
+        actionSlider.value = actionSpeed;
     }
 }
+

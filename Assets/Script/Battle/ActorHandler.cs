@@ -20,7 +20,9 @@ public enum ActorAligmentEnum
 public class ActorHandler : MonoBehaviour
 {
     private static readonly int AttackHash = Animator.StringToHash("Attack");
-
+    public AudioClip slideSound;
+    public AudioClip hitSound;
+    public AudioSource sfx;
     private enum State{Idle,Sliding,Busy,FinishAct}
     public enum ChoosenAction{Attack,Defend}
     public enum ChooseTargetType{Ally,Enemy}
@@ -86,6 +88,7 @@ public class ActorHandler : MonoBehaviour
 
     void Update()
     {
+        healthBar.UpdateActionBar(currentActionSpeed);
         healthBar.UpdateHealthBar(actorStats.health);
         switch (state)
         {
@@ -177,9 +180,14 @@ public class ActorHandler : MonoBehaviour
     {
         yield return new WaitForSecondsRealtime(time);
     }
-    
+    public void PlayAudio(AudioClip newsfx)
+    {
+        sfx.clip = newsfx;
+        sfx.Play();
+    }
     public void SlideToPosition(Vector3 slideTarget, Action onSlideComplete)
     {
+        PlayAudio(slideSound);
         this.targetSlidePosition = slideTarget;
         this.OnSlideComplete = onSlideComplete;
         state = State.Sliding;
@@ -188,6 +196,7 @@ public class ActorHandler : MonoBehaviour
     private void PlayAttackAnimation(Action onAttackAnimationComplete)
     {
        actorAnimator.Play(AttackHash);
+       PlayAudio(hitSound);
         StartCoroutine(WaitForAnimation("Attack", () =>
         {
             onAttackAnimationComplete();
@@ -230,6 +239,7 @@ public class ActorHandler : MonoBehaviour
         
         if (target.actorStats.health <= 0)
         {
+            target.healthBar.gameObject.SetActive(false);
             Dead(target);
         }
     

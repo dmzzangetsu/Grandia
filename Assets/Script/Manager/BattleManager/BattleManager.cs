@@ -192,7 +192,7 @@ public class BattleManager : MonoBehaviour
         {
             Debug.Log("GameOver");
         }
-        else
+        else if(enemyList == null)
         {
             Debug.Log("WINNNN");
             
